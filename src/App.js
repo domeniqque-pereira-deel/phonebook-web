@@ -7,6 +7,8 @@ import DefaultLayout from '~/pages/_layouts/Default/index';
 
 // import '~/styles/global.css';
 
+import '~config/ReactotronConfig';
+
 function App() {
   return (
     <Router history={history}>

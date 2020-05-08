@@ -10,7 +10,7 @@ function Router() {
   return (
     <Switch>
       <Route path="/" exact component={SignIn} />
-      <Route path="/home" component={Home} />
+      <Route path="/home" component={Home} isPrivate />
     </Switch>
   );
 }
