@@ -16,7 +16,7 @@ module.exports = {
     ecmaVersion: 2018,
     sourceType: 'module',
   },
-  plugins: ['react', 'prettier', 'baseui'],
+  plugins: ['react', 'prettier', 'baseui', 'react-hooks'],
   rules: {
     'prettier/prettier': 'error',
     'react/jsx-filename-extension': ['warn', { extensions: ['.js', '.jsx'] }],
@@ -24,12 +24,14 @@ module.exports = {
     'react/jsx-props-no-spreading': 'off',
     'import/prefer-default-export': 'off',
     'jsx-a11y/control-has-associated-label': 'off',
-    'no-console': ['error', { allow: ['tron'] }],
+    'no-console': ['error', { allow: ['tron', 'error'] }],
     'no-param-reassign': 'off',
     'no-underscore-dangle': 'off',
     'baseui/deprecated-theme-api': 'warn',
     'baseui/deprecated-component-api': 'warn',
     'baseui/no-deep-imports': 'warn',
+    'react-hooks/rules-of-hooks': 'error',
+    'react-hooks/exhaustive-deps': 'warn',
   },
   settings: {
     'import/resolver': {

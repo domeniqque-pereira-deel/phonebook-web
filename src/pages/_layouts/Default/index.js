@@ -10,7 +10,9 @@ const Centered = styled('div', {
   display: 'flex',
   justifyContent: 'center',
   alignItems: 'center',
+  flexDirection: 'column',
   height: '100%',
+  padding: '10px',
 });
 
 function Default({ children }) {

@@ -9,8 +9,8 @@ import Route from './Route';
 function Router() {
   return (
     <Switch>
-      <Route path="/" exact component={SignIn} />
-      <Route path="/home" component={Home} isPrivate />
+      <Route path="/" exact component={Home} isPrivate />
+      <Route path="/signin" component={SignIn} />
     </Switch>
   );
 }
