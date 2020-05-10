@@ -1,17 +1,17 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Card, StyledAction, StyledTitle } from 'baseui/card';
 import { FormControl } from 'baseui/form-control';
 import { Button } from 'baseui/button';
-import { Input } from 'baseui/input';
 import { StyledLink } from 'baseui/link';
+import { Input } from 'baseui/input';
 import { useStyletron } from 'baseui';
 import * as Yup from 'yup';
 
 import { getValidationErrors, isEmpty } from '~/utils';
-import { signInRequest } from '~/store/ducks/auth';
+import { signUpRequest } from '~/store/ducks/auth';
 
-function SignIn() {
+function SignUp() {
   const [css, theme] = useStyletron();
 
   const [email, setEmail] = useState('');
@@ -36,17 +36,14 @@ function SignIn() {
     if (!isEmpty(validationErrors)) setValidationErrors({});
 
     try {
-      await schema.validate({ email, password }, { abortEarly: false });
+      const payload = { email, password };
+      await schema.validate(payload, { abortEarly: false });
 
-      dispatch(signInRequest(email, password));
+      dispatch(signUpRequest(payload));
     } catch (errors) {
       setValidationErrors(getValidationErrors(errors));
     }
   }
-
-  useEffect(() => {
-    if (!isLoading) setPassword('');
-  }, [isLoading]);
 
   return (
     <>
@@ -57,21 +54,28 @@ function SignIn() {
       <Card
         overrides={{ Root: { style: { width: '100%', maxWidth: '360px' } } }}
       >
-        <StyledTitle style={{ marginBottom: '15px' }}>Entrar</StyledTitle>
+        <StyledTitle style={{ marginBottom: '15px' }}>Criar conta</StyledTitle>
 
         <form onSubmit={handleSubmit} style={{ paddingBottom: '20px' }}>
-          <FormControl label="Email" error={validationErrors.email ?? null}>
+          <FormControl
+            label="Email"
+            caption="Seu email pessoal"
+            error={validationErrors.email ?? null}
+          >
             <Input
               value={email}
               type="email"
               onChange={(e) => setEmail(e.target.value)}
               error={validationErrors.email}
               disabled={isLoading}
-              autoFocus
             />
           </FormControl>
 
-          <FormControl label="Senha" error={validationErrors.password ?? null}>
+          <FormControl
+            label="Senha"
+            caption="Crie uma senha de pelo menos 5 digitos"
+            error={validationErrors.password ?? null}
+          >
             <Input
               value={password}
               type="password"
@@ -87,15 +91,15 @@ function SignIn() {
               isLoading={isLoading}
               overrides={{ BaseButton: { style: { width: '100%' } } }}
             >
-              Entrar
+              Criar conta
             </Button>
           </StyledAction>
         </form>
 
-        <StyledLink href="/signup">Criar conta</StyledLink>
+        <StyledLink href="/signin">Já tenho conta</StyledLink>
       </Card>
     </>
   );
 }
 
-export default SignIn;
+export default SignUp;

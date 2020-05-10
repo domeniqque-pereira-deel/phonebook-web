@@ -2,6 +2,7 @@ import produce from 'immer';
 
 // Action Types
 export const Types = {
+  SIGN_UP_REQUEST: '@auth/SIGN_UP_REQUEST',
   SIGN_IN_REQUEST: '@auth/SIGN_IN_REQUEST',
   SIGN_IN_SUCCESS: '@auth/SIGN_IN_SUCCESS',
   SIGN_FAILURE: '@auth/SIGN_FAILURE',
@@ -62,6 +63,13 @@ export function signInSuccess(user) {
   return {
     type: Types.SIGN_IN_SUCCESS,
     payload: { user },
+  };
+}
+
+export function signUpRequest({ email, password }) {
+  return {
+    type: Types.SIGN_UP_REQUEST,
+    payload: { email, password },
   };
 }
 
