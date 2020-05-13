@@ -4,9 +4,10 @@ import { useSelector } from 'react-redux';
 import PropTypes from 'prop-types';
 
 import DefaultLayout from '~/pages/_layouts/Default/index';
+import LoginLayout from '~/pages/_layouts/Login/index';
 
 function RouteWrapper({ component: Component, isPrivate, ...rest }) {
-  const signed = useSelector((state) => state.auth.isLogged);
+  const signed = useSelector((state) => state.auth.signed);
 
   if (!signed && isPrivate) {
     return <Redirect to="/signin" />;
@@ -16,10 +17,17 @@ function RouteWrapper({ component: Component, isPrivate, ...rest }) {
     return <Redirect to="/" />;
   }
 
+  const Layout = signed ? DefaultLayout : LoginLayout;
+
   return (
-    <DefaultLayout>
-      <Route {...rest} render={(props) => <Component {...props} />} />
-    </DefaultLayout>
+    <Route
+      {...rest}
+      render={(props) => (
+        <Layout>
+          <Component {...props} />
+        </Layout>
+      )}
+    />
   );
 }
 

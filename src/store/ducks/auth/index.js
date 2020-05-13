@@ -11,8 +11,7 @@ export const Types = {
 
 // Reducers
 const INITIAL_STATE = {
-  isLogged: false,
-  token: null,
+  signed: false,
   loading: false,
   user: {},
 };
@@ -27,7 +26,6 @@ export default function reducer(state = INITIAL_STATE, action) {
         draft.user = action.payload.user;
         draft.signed = true;
         draft.loading = false;
-        draft.isLogged = true;
         break;
       }
       case Types.SIGN_FAILURE: {

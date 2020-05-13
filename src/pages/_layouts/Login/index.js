@@ -1,10 +1,10 @@
 import React from 'react';
 import { styled } from 'baseui';
 import PropTypes from 'prop-types';
-import Menu from './Menu';
 
 const Centered = styled('div', {
   display: 'flex',
+  justifyContent: 'center',
   alignItems: 'center',
   flexDirection: 'column',
   height: '100%',
@@ -12,12 +12,7 @@ const Centered = styled('div', {
 });
 
 function Login({ children }) {
-  return (
-    <>
-      <Menu />
-      <Centered>{children}</Centered>
-    </>
-  );
+  return <Centered>{children}</Centered>;
 }
 
 Login.propTypes = {

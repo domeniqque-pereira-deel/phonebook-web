@@ -13,3 +13,7 @@ export const isEmpty = (target) => {
 
   return target === null || target === undefined;
 };
+
+export const getFirstSelectValue = (val) => {
+  return val && val[0] ? val[0].value : '';
+};
