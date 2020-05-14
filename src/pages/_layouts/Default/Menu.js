@@ -6,16 +6,15 @@ import {
   StyledNavigationItem,
 } from 'baseui/header-navigation';
 import { StyledLink } from 'baseui/link';
-import { Button, SHAPE } from 'baseui/button';
+import { Button, SHAPE, KIND } from 'baseui/button';
 import { useDispatch } from 'react-redux';
 import { useStyletron, styled } from 'baseui';
-import { ButtonGroup } from 'baseui/button-group';
+import { MdPeople, MdList } from 'react-icons/md';
 
 import { signOut } from '~/store/ducks/auth';
 import history from '~/services/history';
 
 function Menu() {
-  // const userEmail = useSelector((state) => state.auth.user.email);
   const dispatch = useDispatch();
 
   const [css] = useStyletron();
@@ -31,8 +30,9 @@ function Menu() {
     position: 'fixed',
     bottom: '-10px',
     left: '0',
-    padding: '10px 10px 20px 10px',
-    background: '#eee',
+    paddingBottom: '10px',
+    background: '#fff',
+    borderTop: '1px solid #eee',
     display: 'flex',
     justifyContent: 'center',
     alignItems: '',
@@ -41,9 +41,21 @@ function Menu() {
     },
   });
 
+  const ButtonBottom = styled(Button, {
+    display: 'flex',
+    flexDirection: 'column',
+    justifyContent: 'center',
+    alignItems: 'center',
+  });
+
+  const MenuLink = styled(StyledLink, {
+    display: 'flex',
+    alignItems: 'center',
+  });
+
   return (
     <>
-      <HeaderNavigation style={{ padding: '10px', border: 'none' }}>
+      <HeaderNavigation className={css({ padding: '10px', border: 'none' })}>
         <StyledNavigationList $align={ALIGN.left}>
           <StyledNavigationItem>
             <StyledLink onClick={() => history.push('/')}>Phonebook</StyledLink>
@@ -54,12 +66,16 @@ function Menu() {
 
         <StyledNavigationList className={topMenuStyle} $align={ALIGN.right}>
           <StyledNavigationItem>
-            <StyledLink onClick={() => history.push('/persons')}>
-              Interessados
-            </StyledLink>
+            <MenuLink onClick={() => history.push('/person')}>
+              <MdPeople />
+              <span className={css({ marginLeft: '4px' })}>Interessados</span>
+            </MenuLink>
           </StyledNavigationItem>
           <StyledNavigationItem>
-            <StyledLink href="#basic-link2">Números</StyledLink>
+            <MenuLink href="#basic-link2">
+              <MdList />{' '}
+              <span className={css({ marginLeft: '4px' })}>Números</span>
+            </MenuLink>
           </StyledNavigationItem>
         </StyledNavigationList>
 
@@ -73,10 +89,17 @@ function Menu() {
       </HeaderNavigation>
 
       <BottomMenu>
-        <ButtonGroup>
-          <Button onClick={() => history.push('/persons')}>Interessados</Button>
-          <Button>Números</Button>
-        </ButtonGroup>
+        <ButtonBottom
+          kind={KIND.tertiary}
+          onClick={() => history.push('/person')}
+        >
+          <MdPeople size="1.2rem" />
+          <span>Interessados</span>
+        </ButtonBottom>
+        <ButtonBottom kind={KIND.tertiary}>
+          <MdList size="1.2rem" />
+          <span>Números</span>
+        </ButtonBottom>
       </BottomMenu>
     </>
   );

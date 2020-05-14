@@ -189,7 +189,7 @@ function CreatePerson() {
         <Button
           kind={KIND.tertiary}
           type="button"
-          onClick={() => history.push('/persons')}
+          onClick={() => history.push('/person')}
           disabled={isLoading}
         >
           Cancelar

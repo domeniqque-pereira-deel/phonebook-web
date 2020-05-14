@@ -1,7 +1,13 @@
 import { all, takeLatest, call, put } from 'redux-saga/effects';
 import { toast } from 'react-toastify';
 
-import { Types, addPersonSuccess, personFailure } from './index';
+import {
+  Types,
+  addPersonSuccess,
+  personFailure,
+  fetchPersonsSuccess,
+  fetchPersonsFailure,
+} from './index';
 import { Database } from '~/services/firebase';
 import {
   PERSON_COLLECTION_PATH,
@@ -42,14 +48,38 @@ function* addPerson({ payload }) {
     toast.success('Pessoa cadastrada com sucesso');
     yield put(addPersonSuccess(dataPerson));
 
-    history.push('/persons');
+    history.push('/person');
   } catch (error) {
     toast.error(
       'Não foi possível realizar o cadastro, tente novamente mais tarde'
     );
+
     console.error(error);
+
     yield put(personFailure());
   }
 }
 
-export default all([takeLatest(Types.ADD_PERSON_REQUEST, addPerson)]);
+function* fetchPersons() {
+  try {
+    const Collection = Database.collection(PERSON_COLLECTION_PATH);
+
+    const querySnapshot = yield call([Collection, Collection.get]);
+    const persons = [];
+
+    querySnapshot.forEach((doc) => {
+      persons.push({ id: doc.id, ...doc.data() });
+    });
+
+    yield put(fetchPersonsSuccess(persons));
+  } catch (error) {
+    console.error(error);
+
+    yield put(fetchPersonsFailure());
+  }
+}
+
+export default all([
+  takeLatest(Types.ADD_PERSON_REQUEST, addPerson),
+  takeLatest(Types.FETCH_PERSONS_REQUEST, fetchPersons),
+]);
