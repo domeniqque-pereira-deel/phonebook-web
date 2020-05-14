@@ -9,6 +9,7 @@ export const Types = {
   FETCH_PERSONS_FAILURE: '@person/FETCH_PERSONS_FAILURE',
   UPDATE_PERSON_REQUEST: '@person/UPDATE_PERSON_REQUEST',
   UPDATE_PERSON_SUCCESS: '@person/UPDATE_PERSON_SUCCESS',
+  ADD_RECORD_REQUEST: '@person/ADD_RECORD_REQUEST',
 };
 
 export const INITIAL_STATE = {
@@ -20,6 +21,7 @@ export const INITIAL_STATE = {
 export default function reducer(state = INITIAL_STATE, action) {
   return produce(state, (draft) => {
     switch (action.type) {
+      case Types.ADD_RECORD_REQUEST:
       case Types.ADD_PERSON_REQUEST:
         draft.loading = true;
         break;
@@ -40,6 +42,13 @@ export default function reducer(state = INITIAL_STATE, action) {
         draft.list = action.payload;
         draft.hasError = false;
         break;
+      case Types.UPDATE_PERSON_SUCCESS: {
+        let person = draft.list.find((p) => p.id === action.payload.id);
+        if (person) person = action.payload;
+        draft.loading = false;
+        draft.hasError = false;
+        break;
+      }
       default:
         break;
     }
@@ -74,4 +83,15 @@ export function fetchPersonsSuccess(payload) {
 
 export function fetchPersonsFailure() {
   return { type: Types.FETCH_PERSONS_FAILURE };
+}
+
+export function updatePersonSuccess(person) {
+  return { type: Types.UPDATE_PERSON_SUCCESS, payload: person };
+}
+
+export function addRecordRequest(personId, record, date) {
+  return {
+    type: Types.ADD_RECORD_REQUEST,
+    payload: { personId, record, date },
+  };
 }

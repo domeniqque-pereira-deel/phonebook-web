@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { useParams } from 'react-router';
 import { Label3, H6, Paragraph4 } from 'baseui/typography';
@@ -13,12 +13,11 @@ import * as Yup from 'yup';
 
 import { Container, Line, StyledPhoneLink, Section } from './styles';
 import { getValidationErrors, isEmpty } from '~/utils';
+import { addRecordRequest } from '~/store/ducks/person';
 
 const schema = Yup.object().shape({
   record: Yup.string().required('Informe uma descrição'),
-  recordDate: Yup.date('Informe uma data válida').required(
-    'Selecione a data da conversa'
-  ),
+  recordDate: Yup.date().required(),
 });
 
 function ShowPerson() {
@@ -34,7 +33,15 @@ function ShowPerson() {
   const dispatch = useDispatch();
   const [css] = useStyletron();
 
-  const isLoading = false;
+  const isLoading = useSelector((state) => state.person.loading);
+  const hasSubmitError = useSelector((state) => state.person.hasError);
+
+  useEffect(() => {
+    if (!isLoading && !hasSubmitError) {
+      setRecord('');
+      setRecordDate(new Date());
+    }
+  }, [isLoading, hasSubmitError]);
 
   async function handleSubmitRecord(event) {
     event.preventDefault();
@@ -50,7 +57,7 @@ function ShowPerson() {
         { abortEarly: false }
       );
 
-      // dispatch(addPersonRequest(payload));
+      dispatch(addRecordRequest(person.id, record, recordDate));
     } catch (errors) {
       setRecordError(getValidationErrors(errors));
     }
@@ -110,7 +117,9 @@ function ShowPerson() {
             {record && (
               <FormControl
                 label="Dia da conversa"
-                error={recordError.recordDate}
+                error={
+                  recordError.recordDate ? 'Informe uma data válida' : null
+                }
               >
                 <Datepicker
                   value={recordDate}
