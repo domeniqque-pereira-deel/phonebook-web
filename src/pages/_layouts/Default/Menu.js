@@ -35,6 +35,7 @@ function Menu() {
     borderTop: '1px solid #eee',
     display: 'flex',
     justifyContent: 'center',
+    zIndex: '1000',
     alignItems: '',
     '@media screen and (min-width: 625px)': {
       display: 'none',

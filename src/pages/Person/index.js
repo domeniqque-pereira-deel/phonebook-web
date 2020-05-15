@@ -3,10 +3,12 @@ import { StyledBody } from 'baseui/card';
 import { Button, KIND, SIZE } from 'baseui/button';
 import { MdAdd, MdAutorenew } from 'react-icons/md';
 import { useDispatch, useSelector } from 'react-redux';
+import { Paragraph2 } from 'baseui/typography';
 
 import { PersonList, ButtonAddPerson, CardPerson } from './styles';
 import history from '~/services/history';
 import { fetchPersonsRequest } from '~/store/ducks/person';
+import { HeaderContainer } from '~/styles';
 
 function Person() {
   const dispatch = useDispatch();
@@ -17,11 +19,14 @@ function Person() {
 
   useEffect(() => {
     dispatch(fetchPersonsRequest());
-  }, [dispatch]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return (
     <>
-      <h1>Interessados</h1>
+      <HeaderContainer>
+        <h1>Interessados</h1>
+      </HeaderContainer>
 
       <PersonList>
         <ButtonAddPerson
@@ -38,7 +43,10 @@ function Person() {
               onClick={() => history.push(`/person/${person.id}`)}
             >
               <StyledBody>
-                <span>{person.name}</span>
+                <Paragraph2>
+                  {person.name ? person.name : 'Sem nome'}
+                </Paragraph2>
+                {person.numbers && <small>{person.numbers.join(', ')}</small>}
               </StyledBody>
             </CardPerson>
           ))}

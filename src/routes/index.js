@@ -16,8 +16,8 @@ function Router() {
       <Route path="/" exact component={Home} isPrivate />
       <Route path="/signin" component={SignIn} />
       <Route path="/signup" component={SignUp} />
-      <Route path="/person/:id" component={ShowPerson} isPrivate />
       <Route path="/person/create" component={CreatePerson} isPrivate />
+      <Route path="/person/:id" component={ShowPerson} isPrivate />
       <Route path="/person" component={Persons} isPrivate />
     </Switch>
   );

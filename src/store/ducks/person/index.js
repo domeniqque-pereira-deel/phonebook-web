@@ -35,6 +35,7 @@ export default function reducer(state = INITIAL_STATE, action) {
         draft.loading = false;
         break;
       case Types.FETCH_PERSONS_FAILURE:
+        draft.list = [];
         draft.loading = false;
         draft.hasError = true;
         break;
@@ -43,8 +44,10 @@ export default function reducer(state = INITIAL_STATE, action) {
         draft.hasError = false;
         break;
       case Types.UPDATE_PERSON_SUCCESS: {
-        let person = draft.list.find((p) => p.id === action.payload.id);
-        if (person) person = action.payload;
+        const index = draft.list.findIndex((p) => p.id === action.payload.id);
+
+        if (index >= 0) draft.list.splice(index, 0, action.payload);
+
         draft.loading = false;
         draft.hasError = false;
         break;

@@ -24,7 +24,6 @@ export const SEX_TYPES = ['Masculino', 'Feminino'];
 export const LIFE_STAGES = ['Criança', 'Jovem', 'Adulto', 'Idoso'];
 
 const schema = Yup.object().shape({
-  name: Yup.string().required('Informe o nome do interessado'),
   sex: Yup.string().required('Selecione o sexo'),
   lifeStage: Yup.string().required('Selecione uma opção'),
   numbers: Yup.array().min(1, 'Informe pelo menos um número de contato'),

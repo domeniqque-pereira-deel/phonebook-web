@@ -20,12 +20,15 @@ function* addPerson({ payload }) {
   try {
     const { name, sex, lifeStage, numbers } = payload;
     const numbersTrimmed = numbers.map((number) => number.replace(/\s/g, ''));
+    const ownerUid = yield select((state) => state.auth.user.uid);
+
     const dataPerson = {
       name,
       sex,
       lifeStage,
       records: [],
       numbers: numbersTrimmed,
+      ownerUid,
     };
 
     const PersonCollection = Database.collection(PERSON_COLLECTION_PATH);
@@ -42,11 +45,12 @@ function* addPerson({ payload }) {
     const PhonesCollection = Database.collection(PHONES_COLLECTION_PATH);
 
     const numbersRequest = numbersTrimmed.map((number) => {
-      const NumberRef = PhonesCollection.doc(number);
+      const NumberRef = PhonesCollection.doc(`${number}-${ownerUid}`);
 
       return call([NumberRef, NumberRef.set], {
         active: true,
         value: number,
+        ownerUid,
       });
     });
 
@@ -55,7 +59,7 @@ function* addPerson({ payload }) {
     toast.success('Pessoa cadastrada com sucesso');
     yield put(addPersonSuccess(dataPerson));
 
-    history.push('/person');
+    history.push(`/person/${dataPerson.id}`);
   } catch (error) {
     toast.error(
       'Não foi possível realizar o cadastro, tente novamente mais tarde'
@@ -69,7 +73,11 @@ function* addPerson({ payload }) {
 
 function* fetchPersons() {
   try {
-    const Collection = Database.collection(PERSON_COLLECTION_PATH);
+    const ownerUid = yield select((state) => state.auth.user.uid);
+
+    const Collection = Database.collection(PERSON_COLLECTION_PATH)
+      .where('ownerUid', '==', ownerUid)
+      .orderBy('name');
 
     const querySnapshot = yield call([Collection, Collection.get]);
     const persons = [];
@@ -88,20 +96,21 @@ function* fetchPersons() {
 
 function* addRecordToPerson({ payload }) {
   try {
-    const { personId, record, date } = payload;
+    const { personId, record } = payload;
+
     const person = yield select((state) =>
       state.person.list.find((p) => p.id === personId)
     );
 
-    const records = [...(person.records ?? []), { record, date }];
+    const date = payload.date.getTime();
+
+    const records = [...person.records, { record, date }];
 
     const PersonRef = Database.collection(PERSON_COLLECTION_PATH).doc(personId);
 
     yield call([PersonRef, PersonRef.update], { records });
 
     yield put(updatePersonSuccess({ ...person, records }));
-
-    // history.push(`/person/${personId}`);
 
     toast.success('Conversa adicionada');
   } catch (err) {
