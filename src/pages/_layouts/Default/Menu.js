@@ -67,13 +67,13 @@ function Menu() {
 
         <StyledNavigationList className={topMenuStyle} $align={ALIGN.right}>
           <StyledNavigationItem>
-            <MenuLink onClick={() => history.push('/person')}>
+            <MenuLink onClick={() => history.push('/persons')}>
               <MdPeople />
               <span className={css({ marginLeft: '4px' })}>Interessados</span>
             </MenuLink>
           </StyledNavigationItem>
           <StyledNavigationItem>
-            <MenuLink href="#basic-link2">
+            <MenuLink onClick={() => history.push('/phones')}>
               <MdList />{' '}
               <span className={css({ marginLeft: '4px' })}>Números</span>
             </MenuLink>
@@ -92,12 +92,15 @@ function Menu() {
       <BottomMenu>
         <ButtonBottom
           kind={KIND.tertiary}
-          onClick={() => history.push('/person')}
+          onClick={() => history.push('/persons')}
         >
           <MdPeople size="1.2rem" />
           <span>Interessados</span>
         </ButtonBottom>
-        <ButtonBottom kind={KIND.tertiary}>
+        <ButtonBottom
+          kind={KIND.tertiary}
+          onClick={() => history.push('/phones')}
+        >
           <MdList size="1.2rem" />
           <span>Números</span>
         </ButtonBottom>

@@ -31,7 +31,7 @@ function Person() {
       <PersonList>
         <ButtonAddPerson
           kind={KIND.tertiary}
-          onClick={() => history.push('/person/create')}
+          onClick={() => history.push('/persons/create')}
         >
           <MdAdd /> <span>Adicionar interessado</span>
         </ButtonAddPerson>
@@ -40,7 +40,7 @@ function Person() {
           persons.map((person) => (
             <CardPerson
               key={person.id}
-              onClick={() => history.push(`/person/${person.id}`)}
+              onClick={() => history.push(`/persons/${person.id}`)}
             >
               <StyledBody>
                 <Paragraph2>

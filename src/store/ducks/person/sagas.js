@@ -3,33 +3,23 @@ import { toast } from 'react-toastify';
 
 import { Database } from '~/services/firebase';
 import history from '~/services/history';
+import { PERSON_COLLECTION_PATH } from '~/store/collectionsPaths';
 import {
   Types,
   addPersonSuccess,
   personFailure,
   fetchPersonsSuccess,
   fetchPersonsFailure,
+  fetchPersonsRequest,
   updatePersonSuccess,
 } from './index';
-import {
-  PERSON_COLLECTION_PATH,
-  PHONES_COLLECTION_PATH,
-} from '~/store/collectionsPaths';
 
 function* addPerson({ payload }) {
   try {
-    const { name, sex, lifeStage, numbers } = payload;
-    const numbersTrimmed = numbers.map((number) => number.replace(/\s/g, ''));
+    const numbers = payload.numbers.map((number) => number.replace(/\s/g, ''));
     const ownerUid = yield select((state) => state.auth.user.uid);
 
-    const dataPerson = {
-      name,
-      sex,
-      lifeStage,
-      records: [],
-      numbers: numbersTrimmed,
-      ownerUid,
-    };
+    const dataPerson = { ...payload, numbers, ownerUid, records: [] };
 
     const PersonCollection = Database.collection(PERSON_COLLECTION_PATH);
 
@@ -41,25 +31,10 @@ function* addPerson({ payload }) {
 
     dataPerson.id = id;
 
-    /** Create Numbers */
-    const PhonesCollection = Database.collection(PHONES_COLLECTION_PATH);
-
-    const numbersRequest = numbersTrimmed.map((number) => {
-      const NumberRef = PhonesCollection.doc(`${number}-${ownerUid}`);
-
-      return call([NumberRef, NumberRef.set], {
-        active: true,
-        value: number,
-        ownerUid,
-      });
-    });
-
-    yield all(numbersRequest);
-
     toast.success('Pessoa cadastrada com sucesso');
     yield put(addPersonSuccess(dataPerson));
 
-    history.push(`/person/${dataPerson.id}`);
+    history.push(`/persons/${dataPerson.id}`);
   } catch (error) {
     toast.error(
       'Não foi possível realizar o cadastro, tente novamente mais tarde'
@@ -110,12 +85,33 @@ function* addRecordToPerson({ payload }) {
 
     yield call([PersonRef, PersonRef.update], { records });
 
-    yield put(updatePersonSuccess({ ...person, records }));
-
-    toast.success('Conversa adicionada');
+    yield put(fetchPersonsRequest());
   } catch (err) {
     console.error(err);
     toast.error('Não foi possível adicionar o comentário, tente novamente!');
+    yield put(personFailure());
+  }
+}
+
+function* updatePerson({ payload }) {
+  try {
+    const { id, person } = payload;
+    console.log(person);
+    delete person.id;
+    if (!person.records) person.records = [];
+
+    const PersonRef = Database.collection(PERSON_COLLECTION_PATH).doc(id);
+
+    yield call([PersonRef, PersonRef.update], person);
+
+    yield put(fetchPersonsRequest());
+
+    toast.success('Editado com sucesso!');
+
+    history.push(`/persons/${id}`);
+  } catch (err) {
+    console.error(err);
+    toast.error('Não foi possível editar, tente novamente!');
     yield put(personFailure());
   }
 }
@@ -124,4 +120,5 @@ export default all([
   takeLatest(Types.ADD_PERSON_REQUEST, addPerson),
   takeLatest(Types.FETCH_PERSONS_REQUEST, fetchPersons),
   takeLatest(Types.ADD_RECORD_REQUEST, addRecordToPerson),
+  takeLatest(Types.UPDATE_PERSON_REQUEST, updatePerson),
 ]);

@@ -2,7 +2,7 @@ import React, { useState, useEffect, useMemo } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { useParams } from 'react-router';
 import { Label3, Paragraph3, H6, Paragraph4 } from 'baseui/typography';
-import { MdPhone } from 'react-icons/md';
+import { MdPhone, MdCreate } from 'react-icons/md';
 import { useStyletron } from 'baseui';
 import { FormControl } from 'baseui/form-control';
 import { Textarea } from 'baseui/textarea';
@@ -77,7 +77,7 @@ function ShowPerson() {
         <Button
           kind={KIND.tertiary}
           className={css({ position: 'absolute', left: '0px' })}
-          onClick={() => history.push('/person')}
+          onClick={() => history.push('/persons')}
         >
           Voltar
         </Button>
@@ -89,6 +89,14 @@ function ShowPerson() {
           <Label3>Nome</Label3>
           <strong>{person.name ? person.name : 'Sem nome'}</strong>
         </Line>
+
+        <Button
+          kind={KIND.tertiary}
+          className={css({ position: 'absolute', right: '0px' })}
+          onClick={() => history.push(`/persons/edit/${person.id}`)}
+        >
+          <MdCreate />
+        </Button>
 
         <div className={css({ display: 'flex' })}>
           <Line className={css({ width: '50%' })}>

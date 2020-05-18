@@ -6,6 +6,7 @@ import { Button, KIND } from 'baseui/button';
 import { useStyletron } from 'baseui';
 import { ListItem, ListItemLabel } from 'baseui/list';
 import { useDispatch, useSelector } from 'react-redux';
+import { useParams } from 'react-router';
 import { Delete } from 'baseui/icon';
 import * as Yup from 'yup';
 
@@ -16,10 +17,10 @@ import {
   NumbersList,
   ButtonGroup,
 } from './styles';
-import { HeaderContainer } from '~/styles';
 import { isEmpty, getValidationErrors, getFirstSelectValue } from '~/utils';
-import { addPersonRequest } from '~/store/ducks/person';
+import { updatePersonRequest } from '~/store/ducks/person';
 import history from '~/services/history';
+import { HeaderContainer } from '~/styles';
 
 export const SEX_TYPES = ['Masculino', 'Feminino'];
 export const LIFE_STAGES = ['Criança', 'Jovem', 'Adulto', 'Idoso'];
@@ -30,7 +31,7 @@ const schema = Yup.object().shape({
   numbers: Yup.array().min(1, 'Informe pelo menos um número de contato'),
 });
 
-function CreatePerson() {
+function EditPerson() {
   const [name, setName] = useState('');
   const [sex, setSex] = useState('');
   const [lifeStage, setLifeStage] = useState('');
@@ -42,6 +43,19 @@ function CreatePerson() {
 
   const [css, theme] = useStyletron();
   const dispatch = useDispatch();
+
+  const { id: personId } = useParams();
+
+  const person = useSelector((state) =>
+    state.person.list.find((p) => p.id === personId)
+  );
+
+  useEffect(() => {
+    setName(person.name);
+    setSex([{ id: person.sex, value: person.sex }]);
+    setLifeStage([{ id: person.lifeStage, value: person.lifeStage }]);
+    setNumbers(person.numbers);
+  }, [person]);
 
   function handleAddNumber() {
     if (!isEmpty(validationErrors)) setValidationErrors({});
@@ -72,11 +86,12 @@ function CreatePerson() {
         numbers,
         sex: getFirstSelectValue(sex),
         lifeStage: getFirstSelectValue(lifeStage),
+        records: person.records,
       };
 
       await schema.validate(payload, { abortEarly: false });
 
-      dispatch(addPersonRequest(payload));
+      dispatch(updatePersonRequest(personId, payload));
     } catch (errors) {
       setValidationErrors(getValidationErrors(errors));
     }
@@ -89,13 +104,13 @@ function CreatePerson() {
   return (
     <>
       <HeaderContainer>
-        <h1>Cadastrar Pessoa</h1>
+        <h1>Editar Pessoa</h1>
       </HeaderContainer>
       <Container>
         <form onSubmit={handleSubmitPerson}>
           <FormControl label="Nome" error={validationErrors.name}>
             <Input
-              value={name}
+              value={name ?? person.name}
               onChange={(e) => setName(e.target.value)}
               error={validationErrors.name}
               disabled={isLoading}
@@ -192,7 +207,7 @@ function CreatePerson() {
           <Button
             kind={KIND.tertiary}
             type="button"
-            onClick={() => history.push('/persons')}
+            onClick={() => history.push(`/persons/${person.id}`)}
             disabled={isLoading}
           >
             Cancelar
@@ -204,7 +219,7 @@ function CreatePerson() {
             disabled={isLoading}
             isLoading={isLoading}
           >
-            Salvar
+            Salvar alterações
           </Button>
         </ButtonGroup>
       </Container>
@@ -212,4 +227,4 @@ function CreatePerson() {
   );
 }
 
-export default CreatePerson;
+export default EditPerson;

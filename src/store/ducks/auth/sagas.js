@@ -79,8 +79,6 @@ function* watchForFirebaseAuth({ payload }) {
   } else if (payload.signed) {
     yield put(signOut());
   }
-
-  channel.close();
 }
 
 export default all([

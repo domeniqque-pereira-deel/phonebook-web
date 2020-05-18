@@ -23,6 +23,7 @@ export default function reducer(state = INITIAL_STATE, action) {
     switch (action.type) {
       case Types.ADD_RECORD_REQUEST:
       case Types.ADD_PERSON_REQUEST:
+      case Types.FETCH_PERSONS_REQUEST:
         draft.loading = true;
         break;
       case Types.ADD_PERSON_SUCCESS: {
@@ -42,6 +43,7 @@ export default function reducer(state = INITIAL_STATE, action) {
       case Types.FETCH_PERSONS_SUCCESS:
         draft.list = action.payload;
         draft.hasError = false;
+        draft.loading = false;
         break;
       case Types.UPDATE_PERSON_SUCCESS: {
         const index = draft.list.findIndex((p) => p.id === action.payload.id);
@@ -86,6 +88,10 @@ export function fetchPersonsSuccess(payload) {
 
 export function fetchPersonsFailure() {
   return { type: Types.FETCH_PERSONS_FAILURE };
+}
+
+export function updatePersonRequest(id, person) {
+  return { type: Types.UPDATE_PERSON_REQUEST, payload: { id, person } };
 }
 
 export function updatePersonSuccess(person) {
