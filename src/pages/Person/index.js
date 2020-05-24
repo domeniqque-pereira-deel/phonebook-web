@@ -19,8 +19,7 @@ function Person() {
 
   useEffect(() => {
     dispatch(fetchPersonsRequest());
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [dispatch]);
 
   return (
     <>

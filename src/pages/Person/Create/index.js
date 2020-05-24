@@ -20,6 +20,7 @@ import { HeaderContainer } from '~/styles';
 import { isEmpty, getValidationErrors, getFirstSelectValue } from '~/utils';
 import { addPersonRequest } from '~/store/ducks/person';
 import history from '~/services/history';
+import useQuery from '~/hooks/useQuery';
 
 export const SEX_TYPES = ['Masculino', 'Feminino'];
 export const LIFE_STAGES = ['Criança', 'Jovem', 'Adulto', 'Idoso'];
@@ -42,6 +43,16 @@ function CreatePerson() {
 
   const [css, theme] = useStyletron();
   const dispatch = useDispatch();
+  const queryRouter = useQuery();
+
+  useEffect(() => {
+    const phone = queryRouter.get('phone');
+
+    if (phone) {
+      numbers.push(phone);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   function handleAddNumber() {
     if (!isEmpty(validationErrors)) setValidationErrors({});
@@ -99,6 +110,7 @@ function CreatePerson() {
               onChange={(e) => setName(e.target.value)}
               error={validationErrors.name}
               disabled={isLoading}
+              autoFocus
             />
           </FormControl>
 

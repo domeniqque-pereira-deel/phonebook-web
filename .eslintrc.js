@@ -32,6 +32,7 @@ module.exports = {
     'baseui/no-deep-imports': 'warn',
     'react-hooks/rules-of-hooks': 'error',
     'react-hooks/exhaustive-deps': 'warn',
+    'no-plusplus': 'off',
   },
   settings: {
     'import/resolver': {

@@ -11,7 +11,6 @@ import {
   fetchPersonsSuccess,
   fetchPersonsFailure,
   fetchPersonsRequest,
-  updatePersonSuccess,
 } from './index';
 
 function* addPerson({ payload }) {
@@ -96,7 +95,7 @@ function* addRecordToPerson({ payload }) {
 function* updatePerson({ payload }) {
   try {
     const { id, person } = payload;
-    console.log(person);
+
     delete person.id;
     if (!person.records) person.records = [];
 
