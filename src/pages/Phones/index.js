@@ -2,7 +2,6 @@ import React, { useState, useMemo, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import {
   MdAdd,
-  MdPhone,
   MdCallReceived,
   MdCallMissed,
   MdClose,
@@ -10,18 +9,12 @@ import {
 } from 'react-icons/md';
 import { KIND } from 'baseui/button';
 import { Modal, ModalHeader, ModalBody, SIZE, ROLE } from 'baseui/modal';
-import { StyledLink } from 'baseui/link';
 
 import { HeaderContainer, Container } from '~/styles';
-import {
-  ButtonAddNumber as AddButton,
-  PhoneList,
-  PhoneItem,
-  PhoneOptions,
-  ButtonGroup,
-  ModalAction,
-} from './styles';
+import { AddButton, ButtonGroup, ModalAction } from './styles';
 import history from '~/services/history';
+import PhoneList from '~/components/PhoneList';
+import PhoneFilters from '~/components/PhoneFilters';
 import {
   fetchPhoneListRequest,
   addCallPhoneRequest,
@@ -33,11 +26,11 @@ function Phones() {
   const [selected, setSelected] = useState({});
   const [askByPerson, setAskByPerson] = useState(false);
   const phones = useSelector((state) => state.phone.list);
+  const [selectedFilter, setSelectedFilter] = useState(null);
 
-  const activePhones = useMemo(
-    () => phones.filter((p) => p.active && p.status === null),
-    [phones]
-  );
+  const phoneList = useMemo(() => {
+    return phones.filter((p) => p.active && p.status === selectedFilter);
+  }, [phones, selectedFilter]);
 
   const dispatch = useDispatch();
 
@@ -76,6 +69,7 @@ function Phones() {
       </HeaderContainer>
 
       <Container>
+        <PhoneFilters onSelect={(filter) => setSelectedFilter(filter)} />
         <AddButton
           kind={KIND.tertiary}
           onClick={() => history.push('/phones/create')}
@@ -83,21 +77,7 @@ function Phones() {
           <MdAdd /> <span>Adicionar números</span>
         </AddButton>
 
-        <PhoneList>
-          {activePhones.map((num) => (
-            <PhoneItem key={num.id} onClick={() => showPhoneOptions(num)}>
-              <PhoneOptions>
-                <p>{num.value}</p>
-                <StyledLink
-                  href={`tel:${num.value}`}
-                  style={{ display: 'flex', marginRight: '5px' }}
-                >
-                  <MdPhone size="1.2rem" />
-                </StyledLink>
-              </PhoneOptions>
-            </PhoneItem>
-          ))}
-        </PhoneList>
+        <PhoneList phones={phoneList} onSelect={showPhoneOptions} />
       </Container>
 
       <Modal

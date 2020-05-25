@@ -78,12 +78,11 @@ function* fetchPhoneList() {
 function* addCallPhone({ payload }) {
   try {
     const { phone, callStatus: status } = payload;
-
     const PhoneRef = Database.collection(PHONES_COLLECTION_PATH).doc(phone.id);
 
     yield call([PhoneRef, PhoneRef.update], { status });
 
-    toast.success('Número status adicionado!');
+    toast.success('Status alterado!');
 
     yield put(updatePhoneSuccess({ ...phone, status }));
   } catch (error) {
