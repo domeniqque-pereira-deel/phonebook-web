@@ -2,7 +2,13 @@ import { all, takeLatest, call, put, take } from 'redux-saga/effects';
 import { eventChannel } from 'redux-saga';
 import { toast } from 'react-toastify';
 
-import { Types, signInSuccess, signFailure, signOut } from './index';
+import {
+  Types,
+  signInSuccess,
+  signFailure,
+  signOutRequest,
+  signOutSuccess,
+} from './index';
 import { FirebaseAuth } from '~/services/firebase';
 import history from '~/services/history';
 
@@ -77,12 +83,18 @@ function* watchForFirebaseAuth({ payload }) {
   if (user) {
     yield put(signInSuccess(user));
   } else if (payload.signed) {
-    yield put(signOut());
+    yield put(signOutRequest());
   }
+}
+
+function* signOut() {
+  yield call([FirebaseAuth, FirebaseAuth.signOut]);
+  yield put(signOutSuccess());
 }
 
 export default all([
   takeLatest(Types.SIGN_IN_REQUEST, signIn),
   takeLatest(Types.SIGN_UP_REQUEST, signUp),
+  takeLatest(Types.SIGN_OUT_REQUEST, signOut),
   takeLatest('persist/REHYDRATE', watchForFirebaseAuth),
 ]);

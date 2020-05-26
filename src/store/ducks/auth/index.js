@@ -6,7 +6,8 @@ export const Types = {
   SIGN_IN_REQUEST: '@auth/SIGN_IN_REQUEST',
   SIGN_IN_SUCCESS: '@auth/SIGN_IN_SUCCESS',
   SIGN_FAILURE: '@auth/SIGN_FAILURE',
-  SIGN_OUT: '@auth/SIGN_OUT',
+  SIGN_OUT_REQUEST: '@auth/SIGN_OUT_REQUEST',
+  SIGN_OUT_SUCCESS: '@auth/SIGN_OUT_SUCCESS',
 };
 
 // Reducers
@@ -32,7 +33,7 @@ export default function reducer(state = INITIAL_STATE, action) {
         draft.loading = false;
         break;
       }
-      case Types.SIGN_OUT: {
+      case Types.SIGN_OUT_SUCCESS: {
         draft.user = null;
         draft.signed = false;
         draft.loading = false;
@@ -71,8 +72,14 @@ export function signUpRequest({ email, password }) {
   };
 }
 
-export function signOut() {
+export function signOutRequest() {
   return {
-    type: Types.SIGN_OUT,
+    type: Types.SIGN_OUT_REQUEST,
+  };
+}
+
+export function signOutSuccess() {
+  return {
+    type: Types.SIGN_OUT_SUCCESS,
   };
 }

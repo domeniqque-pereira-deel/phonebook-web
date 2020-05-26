@@ -11,7 +11,7 @@ import { useDispatch } from 'react-redux';
 import { useStyletron, styled } from 'baseui';
 import { MdPeople, MdList } from 'react-icons/md';
 
-import { signOut } from '~/store/ducks/auth';
+import { signOutRequest } from '~/store/ducks/auth';
 import history from '~/services/history';
 
 function Menu() {
@@ -84,7 +84,10 @@ function Menu() {
 
         <StyledNavigationList $align={ALIGN.right}>
           <StyledNavigationItem>
-            <Button onClick={() => dispatch(signOut())} shape={SHAPE.pill}>
+            <Button
+              onClick={() => dispatch(signOutRequest())}
+              shape={SHAPE.pill}
+            >
               Sair
             </Button>
           </StyledNavigationItem>

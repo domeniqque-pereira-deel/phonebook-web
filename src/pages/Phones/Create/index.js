@@ -29,12 +29,13 @@ const schema = Yup.object().shape({
     )
     .required('Informe o início da sequência de números'),
   qtdSequence: Yup.number()
-    .min(0, 'Informe um número positivo válido')
+    .min(1, 'Informe um número positivo válido')
+    .max(300, 'Só é possível criar sequências de 300 números por vez')
     .required('Informe pelo menos um número de contato'),
 });
 
 function CreatePhone() {
-  const [startSequence, setStartSequence] = useState('');
+  const [startSequence, setStartSequence] = useState('069');
   const [qtdSequence, setQtdSequence] = useState(1);
   const [validationErrors, setValidationErrors] = useState({});
   const [sequencePreview, setSequencePreview] = useState([]);
@@ -113,8 +114,6 @@ function CreatePhone() {
               <Input
                 type="number"
                 value={qtdSequence}
-                min="1"
-                max="1000"
                 onChange={(e) => setQtdSequence(e.target.value)}
                 error={validationErrors.qtdSequence}
                 disabled={isLoading}

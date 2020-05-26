@@ -1,5 +1,5 @@
 import React from 'react';
-import { Switch } from 'react-router-dom';
+import { Switch, Redirect } from 'react-router-dom';
 
 import SignIn from '~/pages/SignIn';
 import SignUp from '~/pages/SignUp';
@@ -23,7 +23,9 @@ function Router() {
       <Route path="/persons" component={Persons} isPrivate />
       <Route path="/phones/create" component={CreatePhones} isPrivate />
       <Route path="/phones" component={Phones} isPrivate />
-      <Route path="*" component={Phones} />
+      <Route path="*">
+        <Redirect to="/phones" />
+      </Route>
     </Switch>
   );
 }
