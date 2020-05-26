@@ -97,17 +97,17 @@ function Menu() {
       <BottomMenu>
         <ButtonBottom
           kind={KIND.tertiary}
-          onClick={() => history.push('/persons')}
-        >
-          <MdPeople size="1.2rem" />
-          <span>Interessados</span>
-        </ButtonBottom>
-        <ButtonBottom
-          kind={KIND.tertiary}
           onClick={() => history.push('/phones')}
         >
           <MdList size="1.2rem" />
           <span>Números</span>
+        </ButtonBottom>
+        <ButtonBottom
+          kind={KIND.tertiary}
+          onClick={() => history.push('/persons')}
+        >
+          <MdPeople size="1.2rem" />
+          <span>Interessados</span>
         </ButtonBottom>
       </BottomMenu>
     </>
