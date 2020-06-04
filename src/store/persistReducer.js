@@ -6,7 +6,7 @@ export default (reducers) => {
     {
       key: 'phonelist',
       storage,
-      whitelist: ['person', 'phone'],
+      whitelist: ['person', 'phone', 'auth'],
     },
     reducers
   );

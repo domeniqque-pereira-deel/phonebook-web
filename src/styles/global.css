@@ -38,3 +38,7 @@ ul {
 button {
   cursor: pointer;
 }
+
+h1 {
+  font-size: 26px;
+}

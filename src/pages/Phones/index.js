@@ -35,11 +35,8 @@ function Phones() {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    if (phones.length === 0) {
-      dispatch(fetchPhoneListRequest());
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+    dispatch(fetchPhoneListRequest());
+  }, [dispatch]);
 
   function showPhoneOptions(phone) {
     setIsOpen(true);

@@ -1,5 +1,5 @@
 import React from 'react';
-import { Switch, Redirect } from 'react-router-dom';
+import { Switch, Redirect, Route as BaseRoute } from 'react-router-dom';
 
 import SignIn from '~/pages/SignIn';
 import SignUp from '~/pages/SignUp';
@@ -23,9 +23,9 @@ function Router() {
       <Route path="/persons" component={Persons} isPrivate />
       <Route path="/phones/create" component={CreatePhones} isPrivate />
       <Route path="/phones" component={Phones} isPrivate />
-      <Route path="*">
-        <Redirect to="/phones" />
-      </Route>
+      <BaseRoute path="*">
+        <Redirect to="phones" />
+      </BaseRoute>
     </Switch>
   );
 }
